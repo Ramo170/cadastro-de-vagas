@@ -3,6 +3,8 @@ import { router } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import {
+  Alert,
+  Image,
   StyleSheet,
   Text,
   TextInput,
@@ -26,7 +28,7 @@ export default function Login() {
 
     try {
       await signInWithEmailAndPassword(auth, email, senha);
-      alert("Login realizado com sucesso");
+      Alert.alert("Login", "Seu login realizado com sucesso");
       router.push("/");
     } catch (error: any) {
       if (error.code === "auth/invalid-credencial") {
@@ -38,7 +40,7 @@ export default function Login() {
         alert("Muitas tentativas de login. Tente mais tarde!");
       }
 
-      alert("Email ou senha invalidos");
+      Alert.alert("Erro", "Ocorreu um erro ao realizar o login");
       console.log(error);
     }
     setEmail("");
@@ -47,6 +49,11 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
+      <Image
+        source={require("../../assets/images/vagas-logo.jpeg")}
+        style={{ flex: 1, justifyContent: "center", marginLeft: 550 }}
+      />
+
       <Text style={styles.titulo}>Login</Text>
 
       <TextInput
@@ -81,7 +88,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     padding: 20,
-    backgroundColor: "#f8fafc",
+    backgroundColor: "#02a97e",
   },
   titulo: {
     fontSize: 28,

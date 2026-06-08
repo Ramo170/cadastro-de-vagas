@@ -1,4 +1,5 @@
 import { router } from "expo-router";
+import { signOut } from "firebase/auth";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
@@ -8,10 +9,19 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { db } from "../firebase/firebaseConfig";
+import { auth, db } from "../firebase/firebaseConfig";
 
 export default function Home() {
   const [vagas, setVagas] = useState<any[]>([]);
+
+  async function logout() {
+    try {
+      await signOut(auth);
+      router.replace("/login");
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async function carregarVagas() {
     const snapshot = await getDocs(collection(db, "vagas"));
@@ -34,7 +44,7 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Vagas</Text>
+      <Text style={styles.title}>💼 Vagas Disponiveis</Text>
       <TouchableOpacity
         style={styles.button}
         onPress={() => router.push("/cadastroUsuario")}
@@ -62,11 +72,14 @@ export default function Home() {
         renderItem={({ item }) => (
           <View style={styles.card}>
             <Text style={styles.cargo}>{item.cargo}</Text>
-            <Text style={styles.empresa}>{item.empresa}</Text>
-            <Text style={styles.salario}>{item.salario}</Text>
+            <Text style={styles.empresa}>🏢 {item.empresa}</Text>
+            <Text style={styles.salario}>💰 R$ {item.salario}</Text>
           </View>
         )}
       />
+      <TouchableOpacity onPress={logout} style={styles.botaoLogout}>
+        <Text style={styles.textoLogout}>Sair da Conta</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -132,5 +145,18 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     color: "2b9348",
+  },
+  botaoLogout: {
+    backgroundColor: "#DC2626",
+    padding: 15,
+    borderRadius: 14,
+    alignItems: "center",
+    marginTop: 10,
+  },
+
+  textoLogout: {
+    color: "#FFF",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });
