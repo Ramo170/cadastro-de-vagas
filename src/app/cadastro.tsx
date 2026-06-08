@@ -1,23 +1,29 @@
+import { router } from "expo-router";
 import { addDoc, collection } from "firebase/firestore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  Alert,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import { db } from "../firebase/firebaseConfig";
-
-//cargo
-//empresa
-//salario
+import { auth, db } from "../firebase/firebaseConfig";
 
 export default function Cadastro() {
   const [cargo, setCargo] = useState("");
   const [empresa, setEmpresa] = useState("");
   const [salario, setSalario] = useState("");
+
+  useEffect(() => {
+    const unsubcribe = auth.onAuthStateChanged((user) => {
+      if (!user) {
+        router.replace("/login");
+      }
+    });
+
+    return unsubcribe;
+  }, []);
 
   async function salvarVagas() {
     await addDoc(collection(db, "vagas"), {
@@ -26,7 +32,7 @@ export default function Cadastro() {
       salario,
     });
 
-    alert("Vaga cadastrada com sucesso!")
+    alert("Vaga cadastrada com sucesso!");
   }
 
   return (
