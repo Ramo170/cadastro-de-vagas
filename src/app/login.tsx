@@ -50,7 +50,7 @@ export default function Login() {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../../assets/images/vagas-logo.jpeg")}
+        source={require("../../assets/images/logo-novo-vagas.png")}
         style={{ flex: 1, justifyContent: "center", marginLeft: 550 }}
       />
 
